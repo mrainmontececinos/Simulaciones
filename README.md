@@ -1,6 +1,6 @@
 # Simulaciones
 
-## Simule 100 de los datos que perdió el experto. Para esta pregunta desde una semilla igual a 0, genere los datos normales y utilice el teorema mostrado.
+### Simule 100 de los datos que perdió el experto. Para esta pregunta desde una semilla igual a 0, genere los datos normales y utilice el teorema mostrado.
 
 ```{r}
 set.seed(0)
@@ -18,7 +18,7 @@ u <- runif( n )
 plot( x / x.norma, col = "black", xlab = "x", ylab = "y" )
 ```
 
-## Obtenga el estimador máximo verosímil con 1000 datos generados.
+### Obtenga el estimador máximo verosímil con 1000 datos generados.
 
 ```{r}
 set.seed(5)
@@ -32,7 +32,7 @@ s<-nlm(f,rate<-c(runif(1)),x=x,hessian = TRUE) #Minimiza la función f, y se dis
 s$estimate
 ```
 
-## Intervalo de confianza y test de hipótesis
+### Intervalo de confianza y test de hipótesis
 
 Suponga que los puntajes de una prueba internacional siguen una ley normal de parámetros desconocidos. Genera 30 datos normales de parámetro de media igual a 5 y de varianza igual a 2. Desde una semilla igual a 1,
 
@@ -84,7 +84,7 @@ data=data.frame(y1,y2,x1,x2)
 
 ```
 
-Grafico
+### Grafico
 
 
 ```{r}
@@ -93,7 +93,6 @@ ggplot(data=data,aes(x = x1, y = y1)) +
   geom_point()+ theme_bw()+stat_smooth(method = lm)
 # dibuja puntos, lineas de fondo, metodo de lm =regresion lineal simple
 ```
-
 
 
 Hipótesis nula (H0): los coeficientes son iguales a cero (es decir, sin relación entre x e y)
@@ -118,7 +117,7 @@ summary(modelo1)$coef
 ```
 Para un predictor dado, el estadístico t evalúa si existe o no una asociación significativa entre el predictor y la variable de resultado, es decir, si el coeficiente beta del predictor es significativamente diferente de cero
 
-$y_1=2,72+5,05*x_1$
+y_1=2,72+5,05*x_1
 
 
 ```{r}
@@ -134,8 +133,10 @@ modelo2<-lm(y2~x1+x2)
 summary(modelo2)
 ```
 
-$y_2=32,99+52,99x_1-0,005x_2$
-Interpretación
+y_2=32,99+52,99x_1-0,005x_2
+
+Interpretación:
+
 En nuestro ejemplo, se puede ver que el valor p del estadístico F es < 2.2e-16 que es altamente significativo. Esto significa que, al menos, una de las variables predictoras está significativamente relacionada con la variable de resultado.
 
 
