@@ -1,0 +1,196 @@
+---
+title: "Ignacia"
+author: "Ignacia"
+date: "17-07-2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Simule 100 de los datos que perdio el experto.Para esta pregunta desde un semilla igual a 0, genere los datos normales y utilice el teroema mostrado.
+
+
+```{r}
+# semila
+set.seed(0)
+#tamaño de n
+n <- 100
+# 2 diemnsiones
+d=2
+#creamos una matrix llamada x, que contenga 2 dimension donde n y r son normales
+x <- matrix( rnorm(d * n), n, d )
+#Calculamos la norma de = raiz (suma los valores de x^2)
+x.norma <- sqrt( rowSums( x^2 ) )
+# le decimos que n se distribuye uniforme
+u <- runif( n )
+# graficamaos la norma de x
+plot( x / x.norma, col = "black", xlab = "x", ylab = "y" )
+
+
+```
+
+# Encuentre el estimador maximo verosimil
+
+Sea $X_1,...,X_n$ una m.a de la distribucion exp$(\theta)$. La funcion de verosimilitud es 
+
+$L(\theta)=f(x_1;\theta),...,f(x_n;\theta)$
+$L(\theta)=\theta e^{-\theta x_1},...,\theta e^{-\theta x_n}$
+$L(\theta)=\theta^{n} e^{-\theta n \bar{x}}$
+Entonces;
+
+$ln L(\theta)=nln\theta-\theta n \bar{x}$
+
+$\dfrac{d}{d\theta}ln L(\theta)=\dfrac{n}{\theta}-n \bar{x}$
+
+esta derivada es cero si solo si $\theta=\dfrac{1}{\bar{x}}$
+
+Además, $\dfrac{d^2}{d \theta^2} ln L(\theta)=\dfrac{-n}{\theta^2}<0$
+
+
+Por lo tanto, $\widehat{\theta}=\dfrac{1}{\bar{x}}$ es la estimación para $\theta$
+
+
+# Obtenga el estimador maximo verosimil con 1000 datos generados.
+
+```{r}
+set.seed(5)
+#distribcuion exponencial con rate 0.9
+x<-rexp(1000,rate=0.9)
+# creamos una funcion, que sume y calcule el logaritmo
+f<-function(rate,x){
+  -sum(dexp(x,rate=rate,log = TRUE))
+}
+s<-nlm(f,rate<-c(runif(1)),x=x,hessian = TRUE) #Minimiza la funcion f, y se distribuye uniforme. Y utlizamos la matriz hessiana
+s$estimate
+
+```
+
+
+
+# Intervalo de confianza y test de hipótesis
+Suponga que los puntajes de una prueba internacional siguen una ley normal de parámetros desconocidos. Genera 30 datos normales  de parámetro de media igual a 5 y de varianza igual a 2. Desde una semilla igual a 1,
+
+
+```{r}
+set.seed(1)
+
+ds=sqrt(2);ds
+# distr.normal, n=30, media=5,sd=1.414214
+x=rnorm(30,5,1.414214)
+```
+
+1. Encuentre los estimadores de media y varianza con los 30 datos.
+
+```{r}
+#media
+mean(x)
+#varianza
+var(x)
+#des.estan
+sd(x)
+```
+
+2. Encuentre un intervalo de confianza para la media y para la varianza con una confinza igual a 0,01
+
+Estimación del intervalo de la media poblacional con varianza desconocida
+```{r}
+# prueba t, x=mustra, intervalo de confianza
+t.test (x,conf.level = 0.99)
+```
+
+
+3. Realice el test de hipotesis
+
+$Ho:\mu=5,1$ vs$H1:\mu \ne 5,1$
+
+
+```{r}
+t.test(x, alternative='two.sided',conf.level=0.95, mu=5.1)
+```
+Como el valor-P es 0.945 y mayor que el nivel de significancia 5%, no se rechaza la hipótesis nula.
+
+
+
+
+```{r}
+set.seed(0)
+x1=rnorm(100)
+x2=rnorm(100)
+y1=3+5*x1+rnorm(100,0,2)
+y2=33+53*x1+0.1*x2*rnorm(100,0,2)
+#Creamos un data.frame llamado data
+data=data.frame(y1,y2,x1,x2)
+```
+
+# Regresion lineal
+
+Grafico
+```{r}
+#
+library(ggplot2)
+ggplot(data=data,aes(x = x1, y = y1)) + 
+  geom_point()+ theme_bw()+stat_smooth(method = lm)
+# dibuja puntos, lineas de fondo, metodo de lm =regresion lineal simple
+```
+
+
+
+Hipótesis nula (H0): los coeficientes son iguales a cero (es decir, sin relación entre x e y)
+Hipótesis alternativa (Ha): los coeficientes no son iguales a cero (es decir, hay alguna relación entre x e y)
+
+
+```{r}
+modelo1<-lm(y1~x1,data=data)
+summary(modelo1)
+```
+
+Interpretación
+
+El primer paso para interpretar el análisis de regresión múltiple es examinar el estadístico F y el valor p asociado, en la parte inferior del resumen del modelo.
+
+En nuestro ejemplo, se puede ver que el valor p del estadístico F es < 2.2e-16 que es altamente significativo. Esto significa que, al menos, una de las variables predictoras está significativamente relacionada con la variable de resultado.
+
+Para ver qué variables predictoras son significativas, puede examinar la tabla de coeficientes, que muestra la estimación de los coeficientes beta de regresión y los valores p estadísticos t asociados:
+
+```{r}
+summary(modelo1)$coef
+```
+Para un predictor dado, el estadístico t evalúa si existe o no una asociación significativa entre el predictor y la variable de resultado, es decir, si el coeficiente beta del predictor es significativamente diferente de cero
+
+$y_1=2,72+5,05*x_1$
+
+
+```{r}
+ggplot(data=data,aes(x = x1+x2, y = y1)) + 
+  geom_point()  + theme_bw()+stat_smooth(method = lm)
+```
+
+
+```{r}
+
+
+modelo2<-lm(y2~x1+x2)
+summary(modelo2)
+```
+
+$y_2=32,99+52,99x_1-0,005x_2$
+Interpretación
+En nuestro ejemplo, se puede ver que el valor p del estadístico F es < 2.2e-16 que es altamente significativo. Esto significa que, al menos, una de las variables predictoras está significativamente relacionada con la variable de resultado.
+
+
+
+```{r}
+summary(modelo2)$coef
+```
+
+
+Se puede ver que  x1 están significativamente asociados a y1,mientras que x2 no están significativamente asociados a y2.
+
+
+
+
+
+
+
