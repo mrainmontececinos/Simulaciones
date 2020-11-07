@@ -1,6 +1,6 @@
 ---
 title: "Simulaciones"
-author: "IMrain"
+author: "Mrain"
 date: "17-07-2020"
 output: word_document
 ---
