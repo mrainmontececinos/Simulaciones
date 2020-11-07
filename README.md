@@ -16,9 +16,10 @@ x.norma <- sqrt( rowSums( x^2 ) )
 u <- runif( n )
 # graficamos la norma de x
 plot( x / x.norma, col = "black", xlab = "x", ylab = "y" )
-...
+```
 
 ## Obtenga el estimador máximo verosímil con 1000 datos generados.
+
 ```{r}
 set.seed(5)
 #distribución exponencial con rate 0.9
@@ -29,4 +30,4 @@ f<-function(rate,x){
 }
 s<-nlm(f,rate<-c(runif(1)),x=x,hessian = TRUE) #Minimiza la función f, y se distribuye uniforme. Y utilizamos la matriz hessiana
 s$estimate
-...
+```
