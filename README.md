@@ -19,3 +19,14 @@ plot( x / x.norma, col = "black", xlab = "x", ylab = "y" )
 ...
 
 ## Obtenga el estimador máximo verosímil con 1000 datos generados.
+```{r}
+set.seed(5)
+#distribución exponencial con rate 0.9
+x<-rexp(1000,rate=0.9)
+# creamos una función, que sume y calcule el logaritmo
+f<-function(rate,x){
+  -sum(dexp(x,rate=rate,log = TRUE))
+}
+s<-nlm(f,rate<-c(runif(1)),x=x,hessian = TRUE) #Minimiza la función f, y se distribuye uniforme. Y utilizamos la matriz hessiana
+s$estimate
+...
